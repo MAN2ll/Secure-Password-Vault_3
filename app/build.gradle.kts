@@ -16,26 +16,12 @@ android {
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
-        
-        ndk {
-            abiFilters += listOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
-        }
-    }
-
-    // ✅ ДОБАВЛЕНО ДЛЯ СОВМЕСТИМОСТИ СО СТАРЫМ ПОВЕДЕНИЕМ
-    packaging {
-        jniLibs {
-            useLegacyPackaging = true
-        }
     }
 
     buildTypes {
-        debug {
-            isMinifyEnabled = false
-            isDebuggable = true // Явно включаем отладку, как в старом проекте
-        }
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -49,36 +35,52 @@ android {
     }
 
     kotlinOptions { jvmTarget = "17" }
-    
+
     buildFeatures { compose = true }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.0"
+    }
 }
 
 dependencies {
-    implementation(libs.core.ktx)
-    implementation(libs.lifecycle.runtime)
-    implementation(libs.lifecycle.viewmodel.compose)
-    implementation(libs.activity.compose)
-    implementation(platform(libs.compose.bom))
-    implementation(libs.compose.ui)
-    implementation(libs.compose.ui.graphics)
-    implementation(libs.compose.ui.tooling.preview)
-    implementation(libs.material3)
-    implementation(libs.material.icons)
-    implementation(libs.navigation.compose)
-    implementation(libs.hilt.android)
-    ksp(libs.hilt.compiler)
-    implementation(libs.hilt.navigation.compose)
-    implementation(libs.room.runtime)
-    implementation(libs.room.ktx)
-    ksp(libs.room.compiler)
-    implementation(libs.biometric)
+    // Hilt
+    implementation("com.google.dagger:hilt-android:2.48")
+    ksp("com.google.dagger:hilt-compiler:2.48")
+    implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
     
-    //  ТОЛЬКО ОДНА БИБЛИОТЕКА БЕЗОПАСНОСТИ
-    implementation(libs.security.crypto)
-    
-    // Argon2 требует нативных библиотек, поэтому useLegacyPackaging выше важен!
+    // Безопасность
     implementation("de.mkammerer:argon2-jvm:2.11")
+    implementation("androidx.security:security-crypto:1.1.0-alpha06")
     
-    implementation(libs.coroutines.android)
-    debugImplementation(libs.compose.ui.tooling)
+    // Room
+    implementation("androidx.room:room-runtime:2.6.1")
+    implementation("androidx.room:room-ktx:2.6.1")
+    ksp("androidx.room:room-compiler:2.6.1")
+    
+    // Compose
+    implementation(platform("androidx.compose:compose-bom:2024.02.00"))
+    implementation("androidx.compose.ui:ui")
+    implementation("androidx.compose.ui:ui-graphics")
+    implementation("androidx.compose.ui:ui-tooling-preview")
+    implementation("androidx.compose.material3:material3")
+    implementation("androidx.compose.material:material-icons-extended")
+    
+    // Lifecycle & Navigation
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
+    implementation("androidx.navigation:navigation-compose:2.7.7")
+    
+    // Coroutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.0")
+    
+    // AndroidX Core
+    implementation("androidx.core:core-ktx:1.12.0")
+    implementation("androidx.activity:activity-compose:1.8.2")
+    
+    // Biometric
+    implementation("androidx.biometric:biometric-ktx:1.2.0-alpha05")
+    
+    // Debug
+    debugImplementation("androidx.compose.ui:ui-tooling")
 }
