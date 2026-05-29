@@ -17,23 +17,22 @@ android {
         versionCode = 1
         versionName = "1.0"
         
-        // Оставляем фильтры, чтобы APK работал на всех телефонах
+        // ✅ Поддержка всех архитектур процессоров
         ndk {
             abiFilters += listOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
         }
     }
 
-    // Используем стандартную отладочную подпись (она есть на GitHub по умолчанию)
-    // Убрали кастомный keystore, чтобы избежать ошибок "файл не найден"
-    
     buildTypes {
         debug {
-            // Оставляем дефолтную подпись
             isMinifyEnabled = false
         }
         release {
-            isMinifyEnabled = false // Для диплома пока не включаем сжатие, чтобы не было ошибок
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            isMinifyEnabled = false  // ❗ Отключаем для диплома, чтобы не вырезало код
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
 
@@ -70,8 +69,13 @@ dependencies {
     implementation(libs.room.ktx)
     ksp(libs.room.compiler)
     implementation(libs.biometric)
+    
+    // ✅ ОСТАВЛЯЕМ ТОЛЬКО ЭТУ СТРОКУ (из каталога):
     implementation(libs.security.crypto)
+    
     implementation(libs.coroutines.android)
     debugImplementation(libs.compose.ui.tooling)
-    implementation("androidx.security:security-crypto-ktx:1.1.0-alpha06")
+    
+    // ❌ УДАЛИ ЭТУ СТРОКУ (она дублирует библиотеку выше):
+    // implementation("androidx.security:security-crypto-ktx:1.1.0-alpha06")
 }
