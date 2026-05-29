@@ -9,39 +9,46 @@ plugins {
 android {
     namespace = "com.securevault"
     compileSdk = 35
+
     defaultConfig {
         applicationId = "com.securevault"
         minSdk = 26
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
+        
+        // Оставляем фильтры, чтобы APK работал на всех телефонах
         ndk {
-             abiFilters += listOf("armeabi-v7a",      "arm64-v8a", "x86", "x86_64")
+            abiFilters += listOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
         }
     }
-    signingConfigs {
-        create("debug") {
-            storeFile = file("debug.keystore")
-            storePassword = "android"
-            keyAlias = "androiddebugkey"
-            keyPassword = "android"
-        }
-    }
+
+    // Используем стандартную отладочную подпись (она есть на GitHub по умолчанию)
+    // Убрали кастомный keystore, чтобы избежать ошибок "файл не найден"
     
     buildTypes {
         debug {
-            signingConfig = signingConfigs.getByName("debug")
+            // Оставляем дефолтную подпись
+            isMinifyEnabled = false
         }
+        release {
+            isMinifyEnabled = false // Для диплома пока не включаем сжатие, чтобы не было ошибок
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+
     kotlinOptions { jvmTarget = "17" }
+    
     buildFeatures { compose = true }
-    packaging { resources { excludes += "/META-INF/{AL2.0,LGPL2.1}" } }
+    
+    packaging { 
+        resources { excludes += "/META-INF/{AL2.0,LGPL2.1}" } 
+    }
 }
 
 dependencies {
