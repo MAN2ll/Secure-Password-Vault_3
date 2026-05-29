@@ -19,11 +19,19 @@ android {
              abiFilters += listOf("armeabi-v7a",      "arm64-v8a", "x86", "x86_64")
         }
     }
+    signingConfigs {
+        create("debug") {
+            storeFile = file("debug.keystore")
+            storePassword = "android"
+            keyAlias = "androiddebugkey"
+            keyPassword = "android"
+        }
+    }
+    
     buildTypes {
-        debug { isDebuggable = true }
-        release {
-            isMinifyEnabled = true
-            isShrinkResources = true
+        debug {
+            signingConfig = signingConfigs.getByName("debug")
+        }
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
