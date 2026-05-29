@@ -7,6 +7,28 @@ plugins {
 }
 
 android {
+
+    // АВТО-СОЗДАНИЕ debug.keystore
+    val debugKeystore = rootProject.file("debug.keystore")
+
+    if (!debugKeystore.exists()) {
+        exec {
+            commandLine(
+                "keytool",
+                "-genkey",
+                "-v",
+                "-keystore", debugKeystore.absolutePath,
+                "-storepass", "android",
+                "-alias", "androiddebugkey",
+                "-keypass", "android",
+                "-keyalg", "RSA",
+                "-keysize", "2048",
+                "-validity", "10000",
+                "-dname", "CN=Android Debug,O=Android,C=US"
+            )
+        }
+    }
+
     namespace = "com.securevault"
     compileSdk = 35
 
@@ -27,7 +49,7 @@ android {
         }
     }
 
-    // ВАЖНО: подпись APK
+    // ПОДПИСЬ APK
     signingConfigs {
         create("debug") {
             storeFile = file("../debug.keystore")
