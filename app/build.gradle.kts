@@ -17,18 +17,25 @@ android {
         versionCode = 1
         versionName = "1.0"
         
-        // ✅ Поддержка всех архитектур процессоров
         ndk {
             abiFilters += listOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
+        }
+    }
+
+    // ✅ ДОБАВЛЕНО ДЛЯ СОВМЕСТИМОСТИ СО СТАРЫМ ПОВЕДЕНИЕМ
+    packaging {
+        jniLibs {
+            useLegacyPackaging = true
         }
     }
 
     buildTypes {
         debug {
             isMinifyEnabled = false
+            isDebuggable = true // Явно включаем отладку, как в старом проекте
         }
         release {
-            isMinifyEnabled = false  // ❗ Отключаем для диплома, чтобы не вырезало код
+            isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -44,10 +51,6 @@ android {
     kotlinOptions { jvmTarget = "17" }
     
     buildFeatures { compose = true }
-    
-    packaging { 
-        resources { excludes += "/META-INF/{AL2.0,LGPL2.1}" } 
-    }
 }
 
 dependencies {
@@ -70,12 +73,12 @@ dependencies {
     ksp(libs.room.compiler)
     implementation(libs.biometric)
     
-    // ✅ ОСТАВЛЯЕМ ТОЛЬКО ЭТУ СТРОКУ (из каталога):
+    //  ТОЛЬКО ОДНА БИБЛИОТЕКА БЕЗОПАСНОСТИ
     implementation(libs.security.crypto)
+    
+    // Argon2 требует нативных библиотек, поэтому useLegacyPackaging выше важен!
+    implementation("de.mkammerer:argon2-jvm:2.11")
     
     implementation(libs.coroutines.android)
     debugImplementation(libs.compose.ui.tooling)
-    
-    // ❌ УДАЛИ ЭТУ СТРОКУ (она дублирует библиотеку выше):
-    // implementation("androidx.security:security-crypto-ktx:1.1.0-alpha06")
 }
