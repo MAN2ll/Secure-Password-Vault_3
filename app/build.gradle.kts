@@ -1,10 +1,11 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    id("org.jetbrains.kotlin.plugin.compose") version "2.0.0"  // ✅ ЭТО НУЖНО!
+    id("org.jetbrains.kotlin.plugin.compose") version "2.0.0"
     id("com.google.dagger.hilt.android")
     id("com.google.devtools.ksp")
 }
+
 android {
     namespace = "com.securevault"
     compileSdk = 34
@@ -43,10 +44,7 @@ android {
     buildFeatures {
         compose = true
     }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.3"
-    }
+    // ✅ Блок composeOptions удалён — не нужен с новым плагином
 }
 
 dependencies {
@@ -83,7 +81,7 @@ dependencies {
     // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 
-    // Argon2 (хеширование мастер-пароля)
+    // Argon2
     implementation("de.mkammerer:argon2-jvm:2.11")
 
     // Debug
