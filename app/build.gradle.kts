@@ -1,7 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    id("org.jetbrains.kotlin.plugin.compose") version "2.0.0"
+    id("org.jetbrains.kotlin.plugin.compose")  // ✅ Без версии!
     id("com.google.dagger.hilt.android")
     id("com.google.devtools.ksp")
 }
@@ -44,7 +44,7 @@ android {
     buildFeatures {
         compose = true
     }
-    // ✅ Блок composeOptions удалён — не нужен с новым плагином
+    // ❌ composeOptions удалён — не нужен с новым плагином
 }
 
 dependencies {
