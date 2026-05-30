@@ -1,10 +1,10 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("org.jetbrains.kotlin.plugin.compose") version "2.0.0"  // ✅ ЭТО НУЖНО!
     id("com.google.dagger.hilt.android")
     id("com.google.devtools.ksp")
 }
-
 android {
     namespace = "com.securevault"
     compileSdk = 34
